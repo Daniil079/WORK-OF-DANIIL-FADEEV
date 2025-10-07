@@ -1,0 +1,83 @@
+{% extends 'Data_Base.html' %}
+
+{% block title %} Магазин - Gamuzo {% endblock %}
+
+{% block content %}
+<h1 style="font-family: 'Orbitron', monospace; font-size: 3em; color: var(--neon-blue); margin-bottom: 20px; text-shadow: var(--glow-blue);">🎮 КИБЕРМАГАЗИН</h1>
+
+<div class="filters" style="background: var(--dark-card); padding: 20px; border-radius: var(--radius); margin-bottom: 30px; border: 1px solid var(--neon-green);">
+    <h3 style="font-family: 'Orbitron', monospace; color: var(--neon-green); margin-bottom: 15px;">ФИЛЬТРЫ ПОИСКА</h3>
+    <form method="GET" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <div>
+            <label for="genre" style="color: var(--text-secondary); font-family: 'Orbitron', monospace;">ЖАНР:</label>
+            <select id="genre" name="genre" style="width: 100%; padding: 10px; background: var(--dark-surface); color: var(--text-primary); border: 1px solid var(--neon-blue); border-radius: var(--radius);">
+                <option value="">ВСЕ ЖАНРЫ</option>
+                {% for genre in genres %}
+                <option value="{{ genre.name }}" {% if genre.name == selected_genre %}selected{% endif %}>
+                    {{ genre.name }} 
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div>
+            <label for="platform" style="color: var(--text-secondary); font-family: 'Orbitron', monospace;">ПЛАТФОРМА:</label>
+            <select id="platform" name="platform" style="width: 100%; padding: 10px; background: var(--dark-surface); color: var(--text-primary); border: 1px solid var(--neon-blue); border-radius: var(--radius);">
+                <option value="">ВСЕ ПЛАТФОРМЫ</option>
+                {% for platform in platforms %}
+                <option value="{{ platform.name }}" {% if platform.name == selected_platform %}selected{% endif %}>
+                    {{ platform.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div>
+            <label for="publisher" style="color: var(--text-secondary); font-family: 'Orbitron', monospace;">ИЗДАТЕЛЬ:</label>
+            <select id="publisher" name="publisher" style="width: 100%; padding: 10px; background: var(--dark-surface); color: var(--text-primary); border: 1px solid var(--neon-blue); border-radius: var(--radius);">
+                <option value="">ВСЕ ИЗДАТЕЛИ</option>
+                {% for publisher in publishers %}
+                <option value="{{ publisher.name }}" {% if publisher.name == selected_publisher %}selected{% endif %}>
+                    {{ publisher.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div style="display: flex; align-items: end; gap: 10px;">
+            <button type="submit" class="btn" style="background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple));">
+                <i class="fas fa-filter"></i> ПРИМЕНИТЬ
+            </button>
+            <a href="/shop" class="btn" style="background: var(--dark-surface); color: var(--text-primary); border: 1px solid var(--neon-blue);">
+                <i class="fas fa-sync"></i> СБРОС
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="products-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+    {% for product in shop %}
+    <div class="card" style="transition: all 0.3s ease;">
+        <a href="{{ url_for('product_detail', product_id=product.id) }}" style="text-decoration: none; color: inherit;">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" 
+                 style="width: 100%; height: 180px; object-fit: cover; border-radius: var(--radius); margin-bottom: 15px; border: 1px solid var(--neon-blue);">
+            <h3 style="color: var(--text-primary); margin-bottom: 10px; font-family: 'Orbitron', monospace;">{{ product.name }}</h3>
+            <p style="color: var(--neon-green); margin-bottom: 10px; font-size: 0.9em; font-family: 'Orbitron', monospace;">{{ product.genre_name }}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 1.3em; color: var(--neon-pink); font-weight: bold; font-family: 'Orbitron', monospace;">
+                    {{ "%.2f"|format(product.price) }} ₿
+                </span>
+                <span class="btn" style="padding: 8px 15px; font-size: 0.9em; background: var(--neon-blue); color: black; font-family: 'Orbitron', monospace;">
+                    ПОДКЛЮЧИТЬ
+                </span>
+            </div>
+        </a>
+    </div>
+    {% else %}
+    <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+        <h3 style="color: var(--text-secondary); font-family: 'Orbitron', monospace;">ПРОГРАММЫ НЕ НАЙДЕНЫ</h3>
+        <p style="color: var(--text-secondary);">Измените параметры поиска</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
